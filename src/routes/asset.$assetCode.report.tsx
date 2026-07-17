@@ -63,19 +63,22 @@ function ReportPage() {
     setAiError(null);
     try {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 15000);
-      const { data, error } = await supabase.functions.invoke("ai-triage", {
-        body: {
+      const timer = setTimeout(() => controller.abort(), 20000);
+      const res = await fetch("/api/public/ai-triage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
           complaint,
           asset_name: asset.name,
           category: asset.category,
           location: asset.location,
           condition: asset.condition,
-        },
+        }),
       });
       clearTimeout(timer);
-      if (error) throw error;
-      const parsed = data as AiOut;
+      if (!res.ok) throw new Error(`ai ${res.status}`);
+      const parsed = (await res.json()) as AiOut;
       if (!parsed?.title) throw new Error("empty");
       setAi(parsed);
       setAiOriginal(parsed);
