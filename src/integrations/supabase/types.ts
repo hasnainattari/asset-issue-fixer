@@ -185,6 +185,53 @@ export type Database = {
           },
         ]
       }
+      maintenance_records: {
+        Row: {
+          cost: number | null
+          created_at: string
+          evidence_urls: string[] | null
+          final_condition: string | null
+          id: string
+          inspection_notes: string | null
+          issue_id: string
+          parts_used: string | null
+          technician_id: string
+          work_performed: string | null
+        }
+        Insert: {
+          cost?: number | null
+          created_at?: string
+          evidence_urls?: string[] | null
+          final_condition?: string | null
+          id?: string
+          inspection_notes?: string | null
+          issue_id: string
+          parts_used?: string | null
+          technician_id: string
+          work_performed?: string | null
+        }
+        Update: {
+          cost?: number | null
+          created_at?: string
+          evidence_urls?: string[] | null
+          final_condition?: string | null
+          id?: string
+          inspection_notes?: string | null
+          issue_id?: string
+          parts_used?: string | null
+          technician_id?: string
+          work_performed?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_records_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "issues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
