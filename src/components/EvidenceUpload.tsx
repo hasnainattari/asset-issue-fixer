@@ -62,8 +62,16 @@ export function EvidenceUpload({
         toast.error(`${file.name}: ${error.message}`);
         continue;
       }
-      const { data: pub } = supabase.storage.from("evidence").getPublicUrl(path);
-      uploaded.push(pub.publicUrl);
+      // Bucket is private — mint a long-lived signed URL so <img> / <video> tags work
+      // in both authenticated and anonymous contexts.
+      const { data: signed, error: sErr } = await supabase.storage
+        .from("evidence")
+        .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+      if (sErr || !signed) {
+        toast.error(`${file.name}: could not generate URL`);
+        continue;
+      }
+      uploaded.push(signed.signedUrl);
     }
     if (uploaded.length) onChange([...value, ...uploaded]);
     setUploading(false);
