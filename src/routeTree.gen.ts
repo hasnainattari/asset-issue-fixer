@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QrRouteImport } from './routes/qr'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -16,12 +17,18 @@ import { Route as IssueStatusIssueNumberRouteImport } from './routes/issue-statu
 import { Route as AssetAssetCodeRouteImport } from './routes/asset.$assetCode'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AssetAssetCodeReportRouteImport } from './routes/asset.$assetCode.report'
+import { Route as ApiPublicAiTriageRouteImport } from './routes/api/public/ai-triage'
 import { Route as AuthenticatedDashboardTechnicianRouteImport } from './routes/_authenticated/dashboard.technician'
 import { Route as AuthenticatedDashboardIssuesIdRouteImport } from './routes/_authenticated/dashboard.issues.$id'
 import { Route as AuthenticatedDashboardAssetsNewRouteImport } from './routes/_authenticated/dashboard.assets.new'
 import { Route as AuthenticatedDashboardAssetsLabelsRouteImport } from './routes/_authenticated/dashboard.assets.labels'
 import { Route as AuthenticatedDashboardAssetsIdRouteImport } from './routes/_authenticated/dashboard.assets.$id'
 
+const QrRoute = QrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -55,6 +62,11 @@ const AssetAssetCodeReportRoute = AssetAssetCodeReportRouteImport.update({
   id: '/report',
   path: '/report',
   getParentRoute: () => AssetAssetCodeRoute,
+} as any)
+const ApiPublicAiTriageRoute = ApiPublicAiTriageRouteImport.update({
+  id: '/api/public/ai-triage',
+  path: '/api/public/ai-triage',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardTechnicianRoute =
   AuthenticatedDashboardTechnicianRouteImport.update({
@@ -90,10 +102,12 @@ const AuthenticatedDashboardAssetsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/qr': typeof QrRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/asset/$assetCode': typeof AssetAssetCodeRouteWithChildren
   '/issue-status/$issueNumber': typeof IssueStatusIssueNumberRoute
   '/dashboard/technician': typeof AuthenticatedDashboardTechnicianRoute
+  '/api/public/ai-triage': typeof ApiPublicAiTriageRoute
   '/asset/$assetCode/report': typeof AssetAssetCodeReportRoute
   '/dashboard/assets/$id': typeof AuthenticatedDashboardAssetsIdRoute
   '/dashboard/assets/labels': typeof AuthenticatedDashboardAssetsLabelsRoute
@@ -103,10 +117,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/qr': typeof QrRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/asset/$assetCode': typeof AssetAssetCodeRouteWithChildren
   '/issue-status/$issueNumber': typeof IssueStatusIssueNumberRoute
   '/dashboard/technician': typeof AuthenticatedDashboardTechnicianRoute
+  '/api/public/ai-triage': typeof ApiPublicAiTriageRoute
   '/asset/$assetCode/report': typeof AssetAssetCodeReportRoute
   '/dashboard/assets/$id': typeof AuthenticatedDashboardAssetsIdRoute
   '/dashboard/assets/labels': typeof AuthenticatedDashboardAssetsLabelsRoute
@@ -118,10 +134,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/qr': typeof QrRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/asset/$assetCode': typeof AssetAssetCodeRouteWithChildren
   '/issue-status/$issueNumber': typeof IssueStatusIssueNumberRoute
   '/_authenticated/dashboard/technician': typeof AuthenticatedDashboardTechnicianRoute
+  '/api/public/ai-triage': typeof ApiPublicAiTriageRoute
   '/asset/$assetCode/report': typeof AssetAssetCodeReportRoute
   '/_authenticated/dashboard/assets/$id': typeof AuthenticatedDashboardAssetsIdRoute
   '/_authenticated/dashboard/assets/labels': typeof AuthenticatedDashboardAssetsLabelsRoute
@@ -133,10 +151,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/qr'
     | '/dashboard'
     | '/asset/$assetCode'
     | '/issue-status/$issueNumber'
     | '/dashboard/technician'
+    | '/api/public/ai-triage'
     | '/asset/$assetCode/report'
     | '/dashboard/assets/$id'
     | '/dashboard/assets/labels'
@@ -146,10 +166,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/qr'
     | '/dashboard'
     | '/asset/$assetCode'
     | '/issue-status/$issueNumber'
     | '/dashboard/technician'
+    | '/api/public/ai-triage'
     | '/asset/$assetCode/report'
     | '/dashboard/assets/$id'
     | '/dashboard/assets/labels'
@@ -160,10 +182,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/qr'
     | '/_authenticated/dashboard'
     | '/asset/$assetCode'
     | '/issue-status/$issueNumber'
     | '/_authenticated/dashboard/technician'
+    | '/api/public/ai-triage'
     | '/asset/$assetCode/report'
     | '/_authenticated/dashboard/assets/$id'
     | '/_authenticated/dashboard/assets/labels'
@@ -175,12 +199,21 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  QrRoute: typeof QrRoute
   AssetAssetCodeRoute: typeof AssetAssetCodeRouteWithChildren
   IssueStatusIssueNumberRoute: typeof IssueStatusIssueNumberRoute
+  ApiPublicAiTriageRoute: typeof ApiPublicAiTriageRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/qr': {
+      id: '/qr'
+      path: '/qr'
+      fullPath: '/qr'
+      preLoaderRoute: typeof QrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -229,6 +262,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/asset/$assetCode/report'
       preLoaderRoute: typeof AssetAssetCodeReportRouteImport
       parentRoute: typeof AssetAssetCodeRoute
+    }
+    '/api/public/ai-triage': {
+      id: '/api/public/ai-triage'
+      path: '/api/public/ai-triage'
+      fullPath: '/api/public/ai-triage'
+      preLoaderRoute: typeof ApiPublicAiTriageRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard/technician': {
       id: '/_authenticated/dashboard/technician'
@@ -319,8 +359,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  QrRoute: QrRoute,
   AssetAssetCodeRoute: AssetAssetCodeRouteWithChildren,
   IssueStatusIssueNumberRoute: IssueStatusIssueNumberRoute,
+  ApiPublicAiTriageRoute: ApiPublicAiTriageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
